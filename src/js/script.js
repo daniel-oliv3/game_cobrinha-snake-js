@@ -3,21 +3,55 @@ const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
 
-//tamanho do snake
+//tamanho da cobrinha
 const size = 30;
 
 //criando a cobrinha
-const snake = [{x: 200, y: 200}];
+const snake = [
+    {x: 200, y: 200},
+    {x: 230, y: 200}
+];
+
+//direção da cobrinha
+let direction = "right";
 
 
 //função responsável por desenhar a cobrinha na tela
 const drawSnake = () => {
     ctx.fillStyle = "#ddd";
-    ctx.fillRect(snake[0].x, snake[0].y, size, size);
+    snake.forEach((position, index) => {
+        //cabeça da cobrinha
+        if(index == snake.length -1) {
+            ctx.fillStyle = "white";
+        }
+    ctx.fillRect(position.x, position.y, size, size);
+
+    });
 }
 
 
-drawSnake();
+//função responsável por mover a cobrinha
+const moveSnake = () => {
+    const head = snake[snake.length - 1];
+
+    snake.shift();
+
+    if(direction == "right") {
+        snake.push({x: head.x + size, y: head.y});
+    }
+    
+}
+
+
+
+setInterval(() => {
+    ctx.clearRect(0, 0, 600, 600);
+
+    moveSnake();
+    drawSnake();
+},300);
+
+
 
 
 
