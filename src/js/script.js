@@ -8,8 +8,7 @@ const size = 30;
 
 // criando a cobrinha
 const snake = [
-    {x: 200, y: 200},
-    {x: 230, y: 200}
+    {x: 0, y: 0}
 ];
 
 // direção da cobrinha
@@ -60,13 +59,33 @@ const moveSnake = () => {
 }
 
 
+// função que desenha o grid (grade interna da cobrinha)
+const drawGrid = () => {
+    ctx.lineWidth = 1;
+    // ctx.strokeStyle = "#191919";
+    ctx.strokeStyle = "#666";
+
+    for(let i = 30; i < canvas.width; i += 30) {
+        ctx.beginPath();
+        ctx.lineTo(i, 0);
+        ctx.lineTo(i, 600);    
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.lineTo(0, i);
+        ctx.lineTo(600, i);    
+        ctx.stroke();
+    }
+
+}
+
 
 // função principal loop
 const gameLoop = () => {
     clearInterval(loopId);
 
     ctx.clearRect(0, 0, 600, 600);
-    
+    drawGrid();
     moveSnake();
     drawSnake();
 
@@ -78,25 +97,25 @@ const gameLoop = () => {
 gameLoop();
 
 
-// captura as teclas do teclado, quando pressionadas
+// captura as teclas do teclado, quando pressionada
 document.addEventListener("keydown", ({ key }) => {
     // verifica se a tecla pressionada é igual a direita
-    if(key == "ArrowRight") {
+    if(key == "ArrowRight" && direction != "left") {
         direction = "right";
     }
     // verifica se a tecla pressionada é igual a esquerda
-    if(key == "ArrowLeft") {
+    if(key == "ArrowLeft" && direction != "right") {
         direction = "left";
     }
     // verifica se a tecla pressionada é igual a cima
-    if(key == "ArrowUp") {
+    if(key == "ArrowUp" && direction != "down") {
         direction = "up";
     }
     // verifica se a tecla pressionada é igual a baixo
-    if(key == "ArrowDown") {
+    if(key == "ArrowDown" && direction != "up") {
         direction = "down";
     }
-})
+});
 
 
 
