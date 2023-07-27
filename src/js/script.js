@@ -17,6 +17,44 @@ let direction;
 //looping
 let loopId;
 
+
+// função que gera uma localização (número) aleatória para a fruta
+const randomNumber = (min, max) => {
+    return Math.round(Math.random() * (max - min) + min);
+}
+
+const randomPosition = () => {
+    const number = randomNumber(0, canvas.width - size);
+    return Math.round(number / 30) * 30;
+}
+
+// gerar uma cor aleatoria para a fruta
+const randomColor = () => {
+    const red = randomNumber(0, 255);
+    const green = randomNumber(0, 255);
+    const blue = randomNumber(0, 255);
+
+    return `rgb(${red}, ${green}, ${blue})`;
+}
+
+// criação da fruta
+const food = {
+    x: randomPosition(),
+    y: randomPosition(),
+    color: randomColor()
+}
+
+// função responsável por desenhar a fruta na tela
+const drawFood = () => {
+    const {x, y, color} = food;
+
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 6;
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, size, size);
+    ctx.shadowBlur = 0;
+}
+
 // função responsável por desenhar a cobrinha na tela
 const drawSnake = () => {
     ctx.fillStyle = "#ddd";
@@ -62,8 +100,8 @@ const moveSnake = () => {
 // função que desenha o grid (grade interna da cobrinha)
 const drawGrid = () => {
     ctx.lineWidth = 1;
-    // ctx.strokeStyle = "#191919";
-    ctx.strokeStyle = "#666";
+    ctx.strokeStyle = "#191919";
+
 
     for(let i = 30; i < canvas.width; i += 30) {
         ctx.beginPath();
@@ -80,12 +118,13 @@ const drawGrid = () => {
 }
 
 
-// função principal loop
+// ======= função principal loop =======
 const gameLoop = () => {
     clearInterval(loopId);
 
     ctx.clearRect(0, 0, 600, 600);
     drawGrid();
+    drawFood();
     moveSnake();
     drawSnake();
 
