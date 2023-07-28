@@ -1,6 +1,13 @@
 const canvas = document.querySelector("canvas");
+
 // contexto de renderização 2d
 const ctx = canvas.getContext("2d");
+
+const score = document.querySelector(".score-value");
+const finalScore = document.querySelector(".finalScore > span");
+const menu = document.querySelector(".menu-screen");
+const buttonPlay = document.querySelector(".btn-play");
+
 
 //audio do jogo
 const audio = new Audio("../audio/audio.mp3");
@@ -8,16 +15,22 @@ const audio = new Audio("../audio/audio.mp3");
 // tamanho da cobrinha
 const size = 30;
 
+// posição inicial da cobrinha
+const initialPosition = { x: 270, y: 240 }
+
 // criando a cobrinha
-const snake = [
-    {x: 0, y: 0}
-];
+let snake = [initialPosition];
 
 // direção da cobrinha
 let direction;
 
 //looping
 let loopId;
+
+// função do placar SCORE
+const incrementScore = () => {
+    score.innerText = +score.innerText + 10;
+}
 
 
 // função que gera uma localização (número) aleatória para a fruta
@@ -125,6 +138,7 @@ const checkEat = () => {
     const head = snake[snake.length - 1];
 
     if(head.x == food.x && head.y == food.y) {
+        incrementScore();
         snake.push(head);
         audio.play();
 
@@ -170,6 +184,10 @@ const checkCollision = () => {
 // função game over
 const gameOver = () => {
     direction = undefined;
+
+    menu.style.display = "flex";
+    finalScore.innerText = score.innerText;
+    canvas.style.filter = "blur(3px)";
 }
 
 
@@ -214,10 +232,14 @@ document.addEventListener("keydown", ({ key }) => {
 });
 
 
+//botão play
+buttonPlay.addEventListener("click", () => {
+    score.innerText = "00";
+    menu.style.display = "none";
+    canvas.style.filter = "none";
 
-
-
-
+    snake = [initialPosition]
+});
 
 
 
