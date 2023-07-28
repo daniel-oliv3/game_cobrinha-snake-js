@@ -118,6 +118,23 @@ const drawGrid = () => {
 }
 
 
+// função que verifica se a cobrinha comeu a fruta (colisão)
+const checkEat = () => {
+    const head = snake[snake.length - 1];
+
+    if(head.x == food.x && head.y == food.y) {
+        snake.push(head);
+        //remove a fruta comida e cria outra
+        food.x = randomPosition(),
+        food.y = randomPosition(),
+        food.color = randomColor()
+    } 
+
+    
+
+    
+}
+
 // ======= função principal loop =======
 const gameLoop = () => {
     clearInterval(loopId);
@@ -127,6 +144,7 @@ const gameLoop = () => {
     drawFood();
     moveSnake();
     drawSnake();
+    checkEat();
 
     loopId = setTimeout(() => {
         gameLoop();
