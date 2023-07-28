@@ -2,6 +2,8 @@ const canvas = document.querySelector("canvas");
 // contexto de renderização 2d
 const ctx = canvas.getContext("2d");
 
+//audio do jogo
+const audio = new Audio("../audio/audio.mp3");
 
 // tamanho da cobrinha
 const size = 30;
@@ -118,22 +120,58 @@ const drawGrid = () => {
 }
 
 
-// função que verifica se a cobrinha comeu a fruta (colisão)
+// função que verifica se a cobrinha comeu a fruta 
 const checkEat = () => {
     const head = snake[snake.length - 1];
 
     if(head.x == food.x && head.y == food.y) {
         snake.push(head);
-        //remove a fruta comida e cria outra
-        food.x = randomPosition(),
-        food.y = randomPosition(),
-        food.color = randomColor()
+        audio.play();
+
+        let x = randomPosition();
+        let y = randomPosition();
+
+        while(snake.find((position) => position.x == x && position.y == y)) {
+            x = randomPosition();
+            y = randomPosition();
+        }
+
+        food.x = x;
+        food.y = y;
+        food.color = randomColor();
     } 
 
     
 
     
 }
+
+
+// função que verifica as colisões da cobrinha
+const checkCollision = () => {
+    const head = snake[snake.length - 1];
+    const canvasLimit = canvas.width - size;
+    const neckIndex = snake.length - 2;
+
+    // colisão com a borda da tela
+    const wallCollision = head.x < 0 || head.x > canvasLimit || head.y < 0 || head.y > canvasLimit;
+
+    // colisão com a cobrinha
+    const selfCollision = snake.find((position, index) => {
+        return index < neckIndex && position.x == head.x && position.y == head.y;
+    });
+
+    if(wallCollision || selfCollision) {
+        gameOver();  
+    }        
+}
+
+
+// função game over
+const gameOver = () => {
+    direction = undefined;
+}
+
 
 // ======= função principal loop =======
 const gameLoop = () => {
@@ -145,6 +183,7 @@ const gameLoop = () => {
     moveSnake();
     drawSnake();
     checkEat();
+    checkCollision();
 
     loopId = setTimeout(() => {
         gameLoop();
